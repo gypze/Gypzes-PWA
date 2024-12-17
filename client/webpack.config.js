@@ -1,43 +1,43 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackPwaManifest = require('webpack-pwa-manifest');
-const path = require('path');
-const { InjectManifest } = require('workbox-webpack-plugin');
-const e = require('express');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WebpackPwaManifest = require("webpack-pwa-manifest");
+const path = require("path");
+const { InjectManifest } = require("workbox-webpack-plugin");
 
 // TODO: Add and configure workbox plugins for a service worker and manifest file.
 // TODO: Add CSS loaders and babel to webpack.
 
-
 module.exports = () => {
   return {
-    mode: 'development',
+    mode: "development",
     entry: {
-      main: './src/js/index.js',
-      install: './src/js/install.js'
+      main: "./src/js/index.js",
+      install: "./src/js/install.js",
     },
     output: {
-      filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist'),
+      filename: "[name].bundle.js",
+      path: path.resolve(__dirname, "dist"),
     },
     plugins: [
       new HtmlWebpackPlugin({
-        teemplate: "./index.html",
-        title: "J.A.T.E.",
+        title: "Jate",
+        template: "./index.html",
       }),
       new InjectManifest({
-        swSrc: './src-sw.js',
-        swDest: 'sw.js',
+        swSrc: "./src-sw.js",
+        swDest: "src-sw.js",
+        exclude: [/\.map$/, /manifest\.json$/],
+        maximumFileSizeToCacheInBytes: 5000000, 
       }),
       new WebpackPwaManifest({
-        fingerprints: false,
-        inject: true,
-        name: "Just Another Text Editor",
-        short_name: "J.A.T.E.",
-        description: "Takes notes with JavaScript syntax highlighting!",
+        name: "Jate",
+        short_name: "Jate",
+        description: "A simple note-taking app",
         background_color: "#225ca3",
         theme_color: "#225ca3",
         start_url: "/",
         publicPath: "/",
+        inject: true,
+        fingerprints: false,
         icons: [
           {
             src: path.resolve("src/images/logo.png"),
@@ -45,26 +45,25 @@ module.exports = () => {
             destination: path.join("assets", "icons"),
           },
         ],
-      })    
-      
+      }),
     ],
 
     module: {
       rules: [
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           use: ["style-loader", "css-loader"],
         },
         {
           test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader',
+            loader: "babel-loader",
             options: {
-              presets: ['@babel/preset-env'],
+              presets: ["@babel/preset-env"],
               plugins: [
-                '@babel/plugin-proposal-object-rest-spread',
-                '@babel/transfrom-runtime',
+                "@babel/plugin-transform-runtime",
+                "@babel/plugin-proposal-object-rest-spread",
               ],
             },
           },
@@ -72,5 +71,4 @@ module.exports = () => {
       ],
     },
   };
-}
-    
+};
